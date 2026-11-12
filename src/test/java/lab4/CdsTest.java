@@ -120,9 +120,11 @@ public class CdsTest {
 
         new Select(driver.findElement(By.id("id_MarshSelect"))).selectByValue("1001");
 
-        wait.until(d -> new Select(d.findElement(By.id("id_StopSelect")))
-                .getOptions().stream()
-                .anyMatch(e -> "181".equals(e.getAttribute("value"))));
+        wait.ignoring(StaleElementReferenceException.class).until(
+                ExpectedConditions.presenceOfElementLocated(
+                        By.cssSelector("#id_StopSelect option[value='181']")
+                )
+        );
 
         new Select(driver.findElement(By.id("id_StopSelect"))).selectByValue("181");
 
