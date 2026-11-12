@@ -1,6 +1,6 @@
 
 from pathlib import Path
-
+import re
 from playwright.sync_api import Page, expect
 
 URL = "https://m.cdsvyatka.com/"
@@ -30,8 +30,8 @@ def test_bus_map(page: Page):
 
     page.locator("#id_buttonMap").click()
 
-    expect(page).to_have_url("**/mobile_map.php?*")
-
+    expect(page).to_have_url(re.compile(r".*/mobile_map\.php\?.*"))
+    page.wait_for_timeout(5000)
     page.screenshot(path="screenshots/cds_PY/cds_busMapTest_openMap.png")
 
     page.wait_for_function(
@@ -54,6 +54,7 @@ def test_bus_map(page: Page):
     info = page.locator(".leaflet-popup-content")
 
     expect(info).to_be_visible()
+    page.wait_for_timeout(5000)
 
     page.screenshot(path="screenshots/cds_PY/cds_busMapTest_busInfo.png")
 
