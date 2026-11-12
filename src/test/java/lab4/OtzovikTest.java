@@ -46,7 +46,6 @@ public class OtzovikTest {
 
     void screenshot(String name) throws IOException {
         Path folder = Path.of("screenshots/otzovik");
-        Files.createDirectories(folder);
         byte[] image = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
         Files.write(folder.resolve(name + ".png"), image);
     }

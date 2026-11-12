@@ -52,7 +52,6 @@ public class VyatsuTest {
 
     void screenshot(String name) throws IOException {
         Path folder = Path.of("screenshots");
-        Files.createDirectories(folder);
 
         byte[] image = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
 
