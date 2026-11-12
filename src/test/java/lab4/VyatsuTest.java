@@ -4,9 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.By;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -18,9 +16,6 @@ import java.util.List;
 
 import java.time.Duration;
 import java.util.Objects;
-
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.OutputType;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -91,5 +86,24 @@ public class VyatsuTest {
         wait.until(ExpectedConditions.titleContains("Сведения об ОО Образовательные стандарты и требования"));
         screenshot("vyatsu_svedeniyaTest_openNewPage");
         assertEquals("Сведения об ОО Образовательные стандарты и требования", driver.getTitle());
+    }
+
+    @Test
+    void searchTest() throws IOException {
+        driver.get(URL);
+        screenshot("vyatsu_searchTest_openPage");
+        WebElement searchString =
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@name=\"query\"]")));
+        searchString.sendKeys("отпуск");
+        screenshot("vyatsu_searchTest_writeText");
+        searchString.sendKeys(Keys.ENTER);
+        wait.until(ExpectedConditions.textToBePresentInElementLocated(By.tagName("body"), "Результаты поиска"));
+        screenshot("vyatsu_searchTest_openResultPage");
+        List<WebElement> results = wait.until(
+                ExpectedConditions.numberOfElementsToBeMoreThan(
+                        By.xpath("//h3[contains(., 'Результаты поиска')]/following-sibling::div//a"), 0)
+        );
+
+        assertFalse(results.isEmpty());
     }
 }
