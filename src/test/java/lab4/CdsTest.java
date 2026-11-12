@@ -176,7 +176,7 @@ public class CdsTest {
         }
 
         List<WebElement> favorites = wait.until(
-                ExpectedConditions.numberOfElementsToBe(By.cssSelector("#div_bookmark a[href*='rasp.php']"), 3));
+                ExpectedConditions.numberOfElementsToBe(By.cssSelector("#div_favorits a[href*='rasp.php']"), 3));
 
         screenshot("cds_favoritesTest_result");
 
