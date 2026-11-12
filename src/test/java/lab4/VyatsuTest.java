@@ -74,4 +74,22 @@ public class VyatsuTest {
         screenshot("vyatsu_titleTest");
         assertEquals("Официальный сайт ВятГУ", driver.getTitle());
     }
+
+    @Test
+    void svedeniyaTest() throws IOException {
+        driver.get(URL);
+        screenshot("vyatsu_svedeniyaTest_openPage");
+        WebElement firstLi =
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"jsddm\"]/li[1]")));
+        Actions action = new Actions(driver);
+        action.moveToElement(firstLi).perform();
+        screenshot("vyatsu_svedeniyaTest_openMenu");
+        WebElement targetMenuItem =
+                wait.until(ExpectedConditions.elementToBeClickable(
+                        By.xpath("//*[@id=\"jsddm\"]/li[1]//a[contains(text(),\"Образовательные стандарты\")]")));
+        targetMenuItem.click();
+        wait.until(ExpectedConditions.titleContains("Сведения об ОО Образовательные стандарты и требования"));
+        screenshot("vyatsu_svedeniyaTest_openNewPage");
+        assertEquals("Сведения об ОО Образовательные стандарты и требования", driver.getTitle());
+    }
 }
