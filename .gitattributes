@@ -1,0 +1,3 @@
+playwright/*.py linguist-language=Python
+playwright/*.py -linguist-vendored
+playwright/*.py -linguist-generated
