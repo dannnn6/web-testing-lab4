@@ -106,4 +106,42 @@ public class CdsTest {
         assertFalse(info.getText().isBlank());
     }
 
+    @Test
+    void predictionTest() throws IOException {
+        driver.get(URL);
+
+        wait.until(d -> !new Select(d.findElement(By.id("id_CitySelect"))).getOptions().isEmpty());
+
+        new Select(driver.findElement(By.id("id_CitySelect"))).selectByValue("1");
+
+        wait.until(d -> new Select(d.findElement(By.id("id_MarshSelect")))
+                .getOptions().stream()
+                .anyMatch(e -> "1001".equals(e.getAttribute("value"))));
+
+        new Select(driver.findElement(By.id("id_MarshSelect"))).selectByValue("1001");
+
+        wait.until(d -> new Select(d.findElement(By.id("id_StopSelect")))
+                .getOptions().stream()
+                .anyMatch(e -> "181".equals(e.getAttribute("value"))));
+
+        new Select(driver.findElement(By.id("id_StopSelect"))).selectByValue("181");
+
+        screenshot("cds_predictionTest_selection");
+
+        driver.findElement(By.id("id_buttonPrediction")).click();
+
+        wait.until(ExpectedConditions.urlContains("prediction.php"));
+
+        WebElement row = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr[td[contains(@class,'minutes')]]")));
+
+        screenshot("cds_predictionTest_result");
+
+        List<WebElement> cells = row.findElements(By.tagName("td"));
+
+        assertTrue(cells.size() >= 4);
+        assertTrue(cells.get(1).getText().contains("мин."));
+        assertFalse(cells.get(3).getText().isBlank());
+    }
+
 }
