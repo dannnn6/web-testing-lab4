@@ -148,4 +148,25 @@ public class VyatsuTest {
         alert.accept();
         assertEquals("Указанный e-mail уже находится в базе данных", message.strip());
     }
+
+    @Test
+    void subscribeIncorrectTest() throws IOException {
+        driver.get(URL);
+        screenshot("vyatsu_subscribeIncorrectTest_openPage");
+        WebElement stud = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//a[normalize-space(.)='Студенту']")));
+        stud.click();
+        screenshot("vyatsu_subscribeIncorrectTest_openStudPage");
+        WebElement searchString =
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"email-input\"]")));
+        String email = "12345678";
+        searchString.sendKeys(email);
+        screenshot("vyatsu_subscribeIncorrectTest_writeText");
+        searchString.sendKeys(Keys.ENTER);
+
+        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+        String message = alert.getText();
+        alert.accept();
+        assertEquals("Неправильно введен e-mail", message.strip());
+    }
 }
