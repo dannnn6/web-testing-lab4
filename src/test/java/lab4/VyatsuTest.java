@@ -127,4 +127,25 @@ public class VyatsuTest {
         alert.accept();
         assertEquals("Ваш адрес e-mail \"" + email + "\" успешно добавлен в список рассылки новостей", message.strip());
     }
+
+    @Test
+    void subscribeAlreadyTest() throws IOException {
+        driver.get(URL);
+        screenshot("vyatsu_subscribeAlreadyTest_openPage");
+        WebElement stud = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//a[normalize-space(.)='Студенту']")));
+        stud.click();
+        screenshot("vyatsu_subscribeAlreadyTest_openStudPage");
+        WebElement searchString =
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"email-input\"]")));
+        String email = "12345678@123.ru";
+        searchString.sendKeys(email);
+        screenshot("vyatsu_subscribeAlreadyTest_writeText");
+        searchString.sendKeys(Keys.ENTER);
+
+        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+        String message = alert.getText();
+        alert.accept();
+        assertEquals("Указанный e-mail уже находится в базе данных", message.strip());
+    }
 }
