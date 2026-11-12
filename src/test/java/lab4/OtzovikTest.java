@@ -130,9 +130,7 @@ public class OtzovikTest {
         screenshot("otzovik_completeReviewPreviewTest_startForm");
 
         // Ищем ботанический сад
-        WebElement objectInput = wait.until(ExpectedConditions.elementToBeClickable(
-                By.id("tproduct")
-        ));
+        WebElement objectInput = wait.until(ExpectedConditions.elementToBeClickable(By.id("tproduct")));
         objectInput.sendKeys("Ботанический сад Киров");
 
         WebElement garden = wait.until(ExpectedConditions.elementToBeClickable(
@@ -157,7 +155,7 @@ public class OtzovikTest {
 
         // Текст отзыва
         WebElement body = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#content_body_main .editor-content textarea.text_area_auto_height_ta")));
-        body.sendKeys("Это тестовый текст для проверки формы создания отзыва");
+        body.sendKeys("Это тестовый текст для проверки формы создания отзыва, он не несет особой смысловой нагрузки и не будет публиковаться, если я случайно не отправлю отзыв");
 
         // Плюсы
         WebElement pros = driver.findElement(By.name("content_pros"));
@@ -170,7 +168,7 @@ public class OtzovikTest {
         cons.sendKeys("Недостатков нет");
 
         // Рекомендация
-        WebElement recommend = driver.findElement(By.cssSelector("input[name='recommend'][value='Y']"));
+        WebElement recommend = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("label:has(input[name='recommend'][value='Y'])")));
         recommend.click();
 
         screenshot("otzovik_completeReviewPreviewTest_filledForm");
