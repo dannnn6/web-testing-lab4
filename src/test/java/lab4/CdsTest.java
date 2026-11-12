@@ -146,4 +146,40 @@ public class CdsTest {
         assertFalse(cells.get(3).getText().isBlank());
     }
 
+    @Test
+    void favoritesTest() throws IOException {
+        driver.get(URL);
+
+        wait.until(d -> !new Select(d.findElement(By.id("id_CitySelect"))).getOptions().isEmpty());
+
+        new Select(driver.findElement(By.id("id_CitySelect"))).selectByValue("1");
+
+        wait.until(d -> new Select(d.findElement(By.id("id_MarshSelect")))
+                .getOptions().stream()
+                .anyMatch(e -> "1001".equals(e.getAttribute("value"))));
+
+        new Select(driver.findElement(By.id("id_MarshSelect"))).selectByValue("1001");
+
+
+        wait.until(d -> new Select(d.findElement(By.id("id_StopSelect"))).getOptions().size() >= 4);
+
+        // Добавляем три разные остановки маршрута А1
+        for (int i = 1; i <= 3; i++) {
+            Select stops = new Select(
+                    driver.findElement(By.id("id_StopSelect")));
+
+            stops.selectByIndex(i);
+
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("id_addRaspisToBookMarks_Btn"))).click();
+
+            screenshot("cds_favoritesTest_add" + i);
+        }
+
+        List<WebElement> favorites = wait.until(
+                ExpectedConditions.numberOfElementsToBe(By.cssSelector("#div_bookmark a[href*='rasp.php']"), 3));
+
+        screenshot("cds_favoritesTest_result");
+
+        assertEquals(3, favorites.size());
+    }
 }
