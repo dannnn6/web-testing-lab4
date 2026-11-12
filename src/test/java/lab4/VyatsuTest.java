@@ -11,6 +11,10 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import java.util.Map;
+import java.util.List;
 
 import java.time.Duration;
 import java.util.Objects;
@@ -33,7 +37,18 @@ public class VyatsuTest {
 
     @BeforeEach
     void setup() {
-        driver = new ChromeDriver();
+        ChromeDriver chrome = new ChromeDriver();
+        driver = chrome;
+        driver.manage().window().maximize();
+
+        chrome.executeCdpCommand("Network.enable", Map.of());
+        chrome.executeCdpCommand("Network.setBlockedURLs", Map.of(
+                "urls", List.of(
+                        "*://mc.yandex.ru/*",
+                        "*://openstat.net/*"
+                )
+        ));
+
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
@@ -59,5 +74,4 @@ public class VyatsuTest {
         screenshot("vyatsu_titleTest");
         assertEquals("Официальный сайт ВятГУ", driver.getTitle());
     }
-
 }
