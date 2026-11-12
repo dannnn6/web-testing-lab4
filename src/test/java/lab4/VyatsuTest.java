@@ -15,6 +15,13 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.time.Duration;
 import java.util.Objects;
 
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.OutputType;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class VyatsuTest {
@@ -37,9 +44,19 @@ public class VyatsuTest {
         }
     }
 
+    void screenshot(String name) throws IOException {
+        Path folder = Path.of("screenshots");
+        Files.createDirectories(folder);
+
+        byte[] image = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+
+        Files.write(folder.resolve(name + ".png"), image);
+    }
+
     @Test
-    void titleTest() {
+    void titleTest() throws IOException {
         driver.get(URL);
+        screenshot("vyatsu_titleTest");
         assertEquals("Официальный сайт ВятГУ", driver.getTitle());
     }
 
