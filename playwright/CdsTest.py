@@ -102,4 +102,44 @@ def test_prediction(page: Page):
     assert "мин." in cells.nth(1).inner_text()
     assert cells.nth(3).inner_text().strip() != ""
 
+def test_favorites(page: Page):
+    page.route("**/yandex.ru/ads/system/context.js",
+               lambda route: route.abort())
 
+    page.goto(URL)
+
+    page.wait_for_function(
+        "() => document.querySelector('#id_CitySelect').options.length > 0"
+    )
+
+    page.locator("#id_CitySelect").select_option("1")
+
+    page.locator("#id_MarshSelect option[value='1001']").wait_for(
+        state="attached"
+    )
+
+    page.locator("#id_MarshSelect").select_option("1001")
+
+    page.wait_for_function(
+        "() => document.querySelector('#id_StopSelect').options.length >= 4"
+    )
+
+    # Добавляем три разные остановки маршрута А1
+    for i in range(1, 4):
+        page.locator("#id_StopSelect").select_option(index=i)
+
+        page.locator("#id_addRaspisToBookMarks_Btn").click()
+
+        page.screenshot(
+            path=f"screenshots/cds_PY/cds_favoritesTest_add{i}.png"
+        )
+
+    favorites = page.locator("#div_favorits a[href*='rasp.php']")
+
+    expect(favorites).to_have_count(3)
+
+    page.screenshot(
+        path="screenshots/cds_PY/cds_favoritesTest_result.png"
+    )
+
+    assert favorites.count() == 3
